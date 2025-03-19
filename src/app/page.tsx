@@ -25,14 +25,16 @@ import { useEffect } from "react";
 import { ACCESS_TOKEN } from "../constants";
 import axios, { isCancel, AxiosError } from 'axios';
 import Gallery from "@/components/Gallery";
-import GenreSelector from "./_components/GenreSelector";
+
 import { Film, Moon, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { instance } from "./utils/axios-instance";
-import { PosterSwiper } from "./_components/PosterSwiper";
+
 import Nav from "@/components/Nav";
+import GenreSelector from "@/components/_components/GenreSelector";
+import { PosterSwiper } from "@/components/_components/PosterSwiper";
 
 export default function Home() {
   const [movieList, setMovieList] = useState([])

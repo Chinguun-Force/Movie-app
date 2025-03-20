@@ -10,10 +10,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import formatVoteAverage2 from "@/app/utils/vote";
+import formatVoteAverage2 from "@/utils/vote";
 
 import { BASE_URL } from "@/constants";
-import { instance } from "@/app/utils/axios-instance";
+import { instance } from "@/utils/axios-instance";
 import { MovieTypes } from "@/app/page";
 
 

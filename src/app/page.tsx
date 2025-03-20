@@ -26,15 +26,18 @@ import { ACCESS_TOKEN } from "../constants";
 import axios, { isCancel, AxiosError } from 'axios';
 import Gallery from "@/components/Gallery";
 
-import { Film, Moon, Search } from "lucide-react";
+import { ChevronRight, Film, Moon, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { instance } from "./utils/axios-instance";
+import { instance } from "../utils/axios-instance";
 
+
+import { PosterSwiper } from "@/components/PosterSwiper";
+import GenreSelector from "@/components/GenreSelector";
+import Link from "next/link";
+import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
-import GenreSelector from "@/components/_components/GenreSelector";
-import { PosterSwiper } from "@/components/_components/PosterSwiper";
 
 export default function Home() {
   const [movieList, setMovieList] = useState([])
@@ -85,36 +88,8 @@ export default function Home() {
   ]
   return (
     <div className="p-0">
-      <div className="flex items-center justify-around h-24">
-        <div className="flex">
-          <Film className="text-indigo-700" />
-          <span className="text-indigo-700">Movie Z</span>
-        </div>
-        <div className="flex gap-4">
-          <GenreSelector setGenreId={setGenreId} genreId={genreId} />
-          <div className="flex items-center border border-gray-300 rounded-md">
-            <Search />
-            <Input placeholder={`Search...`} className="border-none selection:border-none" onChange={(e) => setSearchValue(e.currentTarget.value)} />
-          </div>
-
-        </div>
-        <Button className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50" onClick={() => { }}>
-          <Moon className="text-black" />
-        </Button>
-      </div>
-      {/* <Carousel className="relative">
-        <CarouselContent className="gap-0">
-          {nowPlayingMovies.slice(0,3).map((movie: MovieTypes) => {
-            return <CarouselItem key={movie.id} className="h-[50vh]">
-              <img src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`} className="h-full object-center object-cover w-full"/>
-            </CarouselItem>
-          })}
-        </CarouselContent>
-        <CarouselPrevious className="absolute top-1/2"/>
-        <CarouselNext className="absolute "/>
-      </Carousel> */}
+      <Nav setGenreId = {setGenreId} genreId={genreId} setSearchValue={setSearchValue}/>
       <PosterSwiper></PosterSwiper>
-      {/* <Gallery movieList={movieList} /> */}
           {movieRanks.map((rank, index) => {
             return (
               <div key={index}
@@ -122,12 +97,15 @@ export default function Home() {
               >
                 <div className="flex items-center justify-between">
                   <h1 className="text-3xl font-bold mx-20 mb-12">{rank}</h1>
+                  <div className="flex items-center mx-20 mb-12">
+                  <Link href="/seemore">See more</Link>
+                  <ChevronRight/>
+                  </div>
                     </div>
                 <Gallery movieList={rank === "Popular" ? popularMovies : rank === "Top rated" ? topRatedMovies : upComingMovies} />
               </div>
             );
           })}
-          <Gallery movieList={movieList} />
     </div>
 
   )

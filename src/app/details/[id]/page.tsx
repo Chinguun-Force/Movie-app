@@ -38,8 +38,17 @@ type MovieDetailType = {
   vote_average: number
   vote_count: number
 }
+type personType = {
+  name: string
+  job: string
+  profile_path: string
+}
 const page = () => {
   const [movieDetail, setMovieDetail] = useState<MovieDetailType | null>(null)
+  const [cast, setCast] = useState<any>(null)
+  const [crew, setCrew] = useState<any>(null)
+  const [directors, setDirectors] = useState<any>("")
+
   const getMovies = async () => {
     const movie = await instance.get(`/movie/${params.id}?language=en-US`, {
       headers: {
@@ -47,21 +56,31 @@ const page = () => {
       }
     })
     setMovieDetail(movie.data)
-    
   };
+  const getMovieTeam = async () => {
+    const teams = await instance.get(`/movie/${params.id}/credits?language=en-US`, {
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`
+      }
+    })
+    setCast(teams.data.cast)
+    setCrew(teams.data.crew)
+    setDirectors (crew.filter((person:personType) => person.job === "Director"))
+  }
   useEffect(() => {
     getMovies();
+    getMovieTeam()
   }, [])
   const params = useParams()
-  console.log("detail",movieDetail)
+  console.log("directors", directors)
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="space-y-6">
         {/* Movie Title and Info */}
         <div className='flex justify-between items-center'>
           <div>
-            <h1 className="text-2xl font-bold">Wicked</h1>
-            <p className="text-sm text-muted-foreground">2024.11.28 · PG · 2h 40m</p>
+            <h1 className="text-2xl font-bold">{movieDetail?.title}</h1>
+            <p className="text-sm text-muted-foreground">{movieDetail?.release_date} · {movieDetail?.origin_country[0]} · {movieDetail?.runtime} mi</p>
           </div>
           <div className='text-right'>
             <Rating value={movieDetail?.vote_average ?? 0}/>
@@ -74,10 +93,11 @@ const page = () => {
           {/* Poster */}
           <div className="md:col-span-1">
             <Image
-              src="/placeholder.svg?height=400&width=270"
+              src={`https://image.tmdb.org/t/p/w500${movieDetail?.poster_path}`}
               alt="Wicked movie poster"
-              width={270}
+              width={200}
               height={400}
+              quality={100}
               className="rounded-md w-full h-auto object-cover"
               priority
             />
@@ -86,24 +106,24 @@ const page = () => {
           {/* Banner */}
           <div className="md:col-span-2 relative">
             <Image
-              src="/placeholder.svg?height=400&width=600"
-              alt="Wicked movie banner"
-              width={600}
+              src={`https://image.tmdb.org/t/p/original${movieDetail?.backdrop_path}`}
+              alt={`${movieDetail?.title} movie banner`}
+              width={760}
               height={400}
-              className="rounded-md w-full h-auto object-cover"
+              className="rounded-md w-full h-full object-cover brightness-50"
+              quality={100}
               priority
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="absolute inset-0 bg-black/30 rounded-md"></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white">
-                <h2 className="text-xl md:text-2xl font-bold mb-4">EVERYONE DESERVES THE CHANCE TO FLY</h2>
-                <div className="text-5xl md:text-7xl font-bold mb-8">WICKED</div>
+              <div className="absolute bottom-10 transform left-0 translate-x-1/2 -translate-y-1/2 text-center text-white flex items-center gap-2">
                 <Button
                   variant="outline"
-                  className="rounded-full bg-black/50 border-white text-white hover:bg-black/70"
+                  className="rounded-full border-white text-black hover:bg-black/70 w-8 h-8"
                 >
-                  <Play className="mr-2 h-4 w-4" /> Play trailer
+                  <Play /> 
                 </Button>
+                  Play trailer
               </div>
             </div>
           </div>
@@ -127,20 +147,39 @@ const page = () => {
         </div>
 
         {/* Movie Details */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="space-y-1">
-            <p className="font-semibold">Director</p>
-            <p>Jon M. Chu</p>
-          </div>
-          <div className="space-y-1 md:col-span-2">
-            <p className="font-semibold">Writers</p>
-            <p>Winnie Holzman · Dana Fox · Gregory Maguire</p>
-          </div>
-          <div className="space-y-1">
-            <p className="font-semibold">Stars</p>
-            <p>Cynthia Erivo · Ariana Grande · Jeff Goldblum</p>
-          </div>
+        <div className=" rounded-md overflow-hidden">
+      {/* Director Row */}
+      <div className="grid grid-cols-[1fr,3fr] border-b">
+        <div className="font-bold p-4 bg-white">Director</div>
+        <div className="p-4 bg-white">{}</div>
+      </div>
+
+      {/* Writers Row */}
+      <div className="grid grid-cols-[1fr,3fr] border-b">
+        <div className="font-bold p-4 bg-white">Writers</div>
+        <div className="p-4 bg-white">
+          {/* {writers.map((writer, index) => (
+            <React.Fragment key={writer}>
+              {writer}
+              {index < writers.length - 1 && <span className="mx-1">·</span>}
+            </React.Fragment>
+          ))} */}
         </div>
+      </div>
+
+      {/* Stars Row */}
+      <div className="grid grid-cols-[1fr,3fr]">
+        <div className="font-bold p-4 bg-white">Stars</div>
+        <div className="p-4 bg-white">
+          {/* {stars.map((star, index) => (
+            <React.Fragment key={star}>
+              {star}
+              {index < stars.length - 1 && <span className="mx-1">·</span>}
+            </React.Fragment>
+          ))} */}
+        </div>
+      </div>
+    </div>
 
         {/* More Like This */}
         <div className="pt-6">

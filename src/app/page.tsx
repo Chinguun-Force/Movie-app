@@ -23,64 +23,51 @@ export type GalleryProps = {
 import { ChangeEvent, useState } from "react";
 import { useEffect } from "react";
 import { ACCESS_TOKEN } from "../constants";
-import axios, { isCancel, AxiosError } from 'axios';
+import axios from 'axios';
 import Gallery from "@/components/Gallery";
 
 import { ChevronRight, Film, Moon, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
+
 import { instance } from "../utils/axios-instance";
 
 
 import { PosterSwiper } from "@/components/PosterSwiper";
-import GenreSelector from "@/components/GenreSelector";
+
 import Link from "next/link";
-import Footer from "@/components/Footer";
-import Nav from "@/components/Nav";
+
 
 export default function Home() {
   const [movieList, setMovieList] = useState([])
-  const [genreId, setGenreId] = useState(18);
-  const [searchValue, setSearchValue] = useState("")
+  
   const [nowPlayingMovies, setNowPLayingMovies] = useState([])
   const [upComingMovies, setUpComingMovies] = useState([])
   const [topRatedMovies, setTopRatedMovies] = useState([])
   const [popularMovies, setPopularMovies] = useState([])
-  const getMovies = async () => {
-    const movies = await axios.get(`https://api.themoviedb.org/3/${(searchValue === "" ? "discover" : "search")}/movie?language=en&with_genres=${genreId}&query=${searchValue}`, {
-      headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`
-      }
-    })
-    setMovieList(movies.data.results)
-    console.log(movies.data.results)
-    // const movies = await res.json();
-  };
+
   const getNowPlayingMovies = async()=>{
       const nowPlayingmovies = await instance.get(`/movie/now_playing`)
       setNowPLayingMovies(nowPlayingmovies.data.results)
   }
   const getUpComingMovies = async()=>{
-    const upComingMovies = await instance.get(`/movie/upcoming?language=en&with_genres=${genreId}&query=${searchValue}`)
+    const upComingMovies = await instance.get(`/movie/upcoming?language=en`)
     setUpComingMovies(upComingMovies.data.results)
   }
   const getTopRatedMovies = async()=>{
-    const topRatedMovies = await instance.get(`/movie/top_rated?language=en&with_genres=${genreId}&query=${searchValue}`)
+    const topRatedMovies = await instance.get(`/movie/top_rated?language=en`)
     setTopRatedMovies(topRatedMovies.data.results)
   }
   const getPopularMovies = async()=>{
-    const popularMovies = await instance.get(`/movie/popular?language=en&with_genres=${genreId}&query=${searchValue}`)
+    const popularMovies = await instance.get(`/movie/popular?language=en`)
     setPopularMovies(popularMovies.data.results)
   }
   useEffect(() => {
-    getMovies();
     getNowPlayingMovies();
     getUpComingMovies();
     getTopRatedMovies();
     getPopularMovies();
-  }, [genreId, searchValue])
-  console.log(searchValue)
+  }, [])
+ 
   const movieRanks = [
     "Popular",
     "Top rated",
@@ -88,7 +75,6 @@ export default function Home() {
   ]
   return (
     <div className="p-0">
-      <Nav setGenreId = {setGenreId} genreId={genreId} setSearchValue={setSearchValue}/>
       <Gallery movieList={movieList} />
       <PosterSwiper></PosterSwiper>
           {movieRanks.map((rank, index) => {

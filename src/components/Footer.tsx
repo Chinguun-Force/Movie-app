@@ -94,7 +94,12 @@ const Footer = () => {
       <div className=" flex flex-col gap-3 text-[14px] font-bold">
         <p>Follow us</p>
 
-        <p>Facebook Instagram Twitter YouTube</p>
+        <div className='flex gap-2'>
+        <p>Facebook</p>
+        <p>Instagram</p>
+        <p>Twitter</p>
+        <p>YouTube</p>
+        </div>
       </div>
 
     </div>

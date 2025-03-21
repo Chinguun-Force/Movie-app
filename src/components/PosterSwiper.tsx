@@ -19,7 +19,7 @@ import { MovieTypes } from "@/app/page";
 
 export function PosterSwiper() {
   const plugin = React.useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: true })
+    Autoplay({ delay: 4000, stopOnLastSnap: false })
   );
   const [nowPlayingMovies, setNowPLayingMovies] = React.useState([]);
   const getNowPlayingMovies = async()=>{

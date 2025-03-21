@@ -89,6 +89,7 @@ export default function Home() {
   return (
     <div className="p-0">
       <Nav setGenreId = {setGenreId} genreId={genreId} setSearchValue={setSearchValue}/>
+      <Gallery movieList={movieList} />
       <PosterSwiper></PosterSwiper>
           {movieRanks.map((rank, index) => {
             return (

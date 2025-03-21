@@ -39,7 +39,7 @@ console.log(nowPlayingMovies)
       onMouseLeave={plugin.current.reset}
     >
       <CarouselContent className="w-full h-[600px]">
-        {nowPlayingMovies.slice(0, 5).map((movie: MovieTypes, index) => (
+        {nowPlayingMovies.slice(0, 3).map((movie: MovieTypes, index) => (
           <CarouselItem key={movie.id} className="w-full h-full relative">
             
             <img 
@@ -69,7 +69,7 @@ console.log(nowPlayingMovies)
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
-                </svg>{" "}
+                </svg>
                 <p className="text-[#FAFAFA] text-lg font-semibold">
                   {formatVoteAverage2(movie?.vote_average)}
                 </p>
